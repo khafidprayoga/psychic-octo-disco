@@ -11,12 +11,24 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 )
 
 var Server *fiber.App
 var ServerPort int
+var ServerProd bool
+var ServerDebug bool
 
 func init() {
+	debugServer := os.Getenv("APP_DEBUG")
+	if debugServer == "1" {
+		ServerDebug = true
+	}
+
+	serverProd := os.Getenv("PRODUCTION")
+	if serverProd == "1" {
+		ServerProd = true
+	}
 
 	portEnv := os.Getenv("APP_PORT")
 	port, err := strconv.Atoi(portEnv)
@@ -30,10 +42,15 @@ func init() {
 	// Init server if App instance does not exist
 	if Server == nil {
 		fiberConfig := fiber.Config{
-			DisableStartupMessage: os.Getenv("PRODUCTION") == "1",
+			AppName:               "Todo App Challenge ",
+			DisableStartupMessage: ServerProd,
 			JSONEncoder:           sonic.Marshal,
 			JSONDecoder:           sonic.Unmarshal,
-			Prefork:               os.Getenv("PRODUCTION") == "1",
+			Prefork:               ServerProd,
+			BodyLimit:             1 * 1024, // 1MB
+			//EnablePrintRoutes:     ServerDebug,
+			ReadTimeout:  1 * time.Second,
+			WriteTimeout: 1 * time.Second,
 		}
 
 		// Init exported variable `Server` for new fiber app instance
@@ -56,7 +73,7 @@ func init() {
 			Use(newCompressor).
 			Use(newLogger)
 
-		Server.All("/", func(ctx *fiber.Ctx) error {
+		Server.Get("/", func(ctx *fiber.Ctx) error {
 			return ctx.SendString("Todo list API challenge")
 		})
 	}

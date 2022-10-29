@@ -12,5 +12,5 @@ func main() {
 	mysqlCfg := config.GetMysqlConfig()
 	mysqlClient := database.InitMySqlDB(mysqlCfg)
 
-	registry.StartBackend(config.Server, mysqlClient)
+	registry.StartBackend(config.Server, *mysqlClient)
 }

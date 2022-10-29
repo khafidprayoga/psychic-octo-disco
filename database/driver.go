@@ -15,9 +15,10 @@ import (
 
 func InitMySqlDB(cfg *config.DBConfig) *gorm.DB {
 	logLevel := logger.Silent
-	if os.Getenv("DEBUG") == "1" {
+	if config.ServerDebug {
 		logLevel = logger.Info
 	}
+
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{

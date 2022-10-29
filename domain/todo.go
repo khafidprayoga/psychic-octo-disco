@@ -2,7 +2,7 @@ package domain
 
 import "github.com/gofiber/fiber/v2"
 
-// TodoHandler for handle incoming http request with services todo
+// TodoHandler for handle incoming http request with interface todo
 type TodoHandler interface {
 	DeleteData() fiber.Handler
 	GetDetail() fiber.Handler
@@ -11,7 +11,7 @@ type TodoHandler interface {
 	UpdateData() fiber.Handler
 }
 
-// TodoUseCase for handle todo services business logic
+// TodoUseCase for handle todo interface business logic
 type TodoUseCase interface {
 	CreateNewTodo(req string)
 	DeleteExistingTodo(req string)
