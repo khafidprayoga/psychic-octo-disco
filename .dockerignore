@@ -1,0 +1,6 @@
+play/
+*.md
+Dockerfile
+docker-compose.yaml
+cmd/
+coverage/

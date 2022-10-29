@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  todo_app_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'todolist-app'
+      MYSQL_USER: 'fiber'
+      MYSQL_PASSWORD: 'fiber'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysql-todoapp-db:/var/lib/mysql
+volumes:
+  mysql-todoapp-db:
