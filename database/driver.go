@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"github.com/khafidprayoga/psychic-octo-disco/config"
+	"github.com/khafidprayoga/psychic-octo-disco/database/tables"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -45,4 +46,18 @@ func InitMySqlDB(cfg *config.DBConfig) *gorm.DB {
 		panic(err)
 	}
 	return db
+}
+
+func MigrateUp(db *gorm.DB) error {
+	return db.AutoMigrate(
+		&tables.Todo{},
+		&tables.Activity{},
+	)
+}
+
+func MigrateDown(db *gorm.DB) error {
+	return db.Migrator().DropTable(
+		&tables.Todo{},
+		&tables.Activity{},
+	)
 }
