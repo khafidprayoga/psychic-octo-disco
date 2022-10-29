@@ -21,7 +21,7 @@ func (e *MalformedRequest) Error() string {
 	return e.Message
 }
 
-func DecodeJSONBody(c *fiber.Ctx, dst any) error {
+func DecodeJSONBody(c *fiber.Ctx, dst any, out any) error {
 	dec := decoder.NewDecoder(string(c.Body()))
 	dec.DisallowUnknownFields()
 
@@ -82,7 +82,7 @@ func DecodeJSONBody(c *fiber.Ctx, dst any) error {
 		}
 	}
 
-	err := dec.Decode(&struct{}{})
+	err := dec.Decode(&out)
 	if err != io.EOF {
 		return &MalformedRequest{
 			Status:  fiber.StatusBadRequest,

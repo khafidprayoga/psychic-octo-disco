@@ -3,6 +3,7 @@ package dispatch
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
+	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
 )
 
 type TodoHandler struct {
@@ -37,7 +38,28 @@ func (h *TodoHandler) GetList() fiber.Handler {
 
 func (h *TodoHandler) PostNewData() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		var req request.CreateNewTodo
+
+		if err := ctx.BodyParser(&req); err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"status":  "failed",
+				"message": err.Error(),
+			})
+		}
+
+		resData, errLogic, errType := h.useCaseImpl.CreateNewTodo(req)
+		if errLogic != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"status":  "failed",
+				"message": errType.Error(),
+			})
+		}
+
+		return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
+			"status":  "success",
+			"message": "created new todo",
+			"data":    &resData,
+		})
 	}
 }
 

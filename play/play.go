@@ -16,7 +16,7 @@ func main() {
 	mysqlClient := database.InitMySqlDB(mysqlCfg)
 	database.MigrateUp(mysqlClient)
 	//database.MigrateDown(mysqlClient)
-	Seed(mysqlClient)
+	//Seed(mysqlClient)
 }
 
 func Seed(db *gorm.DB) {
@@ -28,7 +28,7 @@ func Seed(db *gorm.DB) {
 		todo := tables.Todo{
 			Title:           fmt.Sprintf("Todo hari ke-%v", i),
 			ActivityGroupId: i%2 + 1,
-			Priority:        priority[i%2],
+			Priority:        &priority[i%2],
 			IsActive:        &active,
 		}
 
