@@ -8,7 +8,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v -installsuffix cgo -o /dist/todo-app-fi
 RUN chmod +x /dist/todo-app-fiber
 
 FROM alpine:latest
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata dumb-init
 ENV TZ Asia/Jakarta
 COPY --from=build-env /dist/todo-app-fiber app
-ENTRYPOINT ["./app"]
+EXPOSE 3030
+ENTRYPOINT ["/usr/bin/dumb-init", "./app"]
