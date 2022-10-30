@@ -27,5 +27,5 @@ type ActivityData interface {
 	DetailActivityData(id string) (*entities.Activity, error)
 	ListActivityData(activityId string) ([]entities.Activity, error)
 	UpdateActivityData(data req.UpdateExistingTodo) (*entities.Activity, error)
-	ValidateTodo(id string) error
+	ValidateActivity(id string) error
 }

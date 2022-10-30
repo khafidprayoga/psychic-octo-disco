@@ -22,7 +22,7 @@ func New(data domain.ActivityData) *ActivityUseCase {
 
 func (u *ActivityUseCase) CreateNewActivity(req request.CreateNewActivity) (res *entities.Activity, httpCode int, errType error, srvError int) {
 	if err := utils.ValidateStruct[request.CreateNewActivity](req); err != nil {
-		errMsg := fmt.Errorf("%v reason %v", interfaceError.FailedCreateNewActivity, err)
+		errMsg := fmt.Errorf("%v, reason: %v", interfaceError.FailedCreateNewActivity, err)
 		return nil, fiber.StatusBadRequest, errMsg, utils.HTTPRequestErr
 	}
 

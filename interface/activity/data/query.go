@@ -45,7 +45,18 @@ func (q *ActivityData) UpdateActivityData(data request.UpdateExistingTodo) (*ent
 	return nil, nil
 
 }
-func (q *ActivityData) ValidateTodo(id string) (err error) {
-	return
+func (q *ActivityData) ValidateActivity(id string) (err error) {
+	var count int64
+	if err := q.dbMysql.Table("activity").
+		Where("id = ?", id).
+		Where("deleted_at IS NULL").
+		Count(&count).Error; err != nil {
+		return err
+	}
+
+	if count == 0 {
+		return interfaceError.DataNotFound
+	}
+	return nil
 
 }
