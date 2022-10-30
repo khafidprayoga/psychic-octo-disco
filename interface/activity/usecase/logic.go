@@ -52,10 +52,16 @@ func (u *ActivityUseCase) DeleteActivity(id string) (res *entities.Activity, htt
 	return
 
 }
-func (u *ActivityUseCase) ListActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
-	return
 
+func (u *ActivityUseCase) ListActivity() (res []entities.Activity, httpCode int, errType error, srvError int) {
+	listData, err := u.data.ListActivityData()
+	if err != nil {
+		return res, fiber.StatusInternalServerError, err, utils.DatabaseError
+	}
+
+	return listData, fiber.StatusOK, nil, 0
 }
+
 func (u *ActivityUseCase) UpdateActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
 	return
 }

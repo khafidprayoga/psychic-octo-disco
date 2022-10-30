@@ -44,7 +44,16 @@ func (h *ActivityHandler) GetDetailActivity() fiber.Handler {
 
 func (h *ActivityHandler) GetAllActivity() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.ListActivity()
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("success get list activity", &resData),
+		)
 	}
 }
 
