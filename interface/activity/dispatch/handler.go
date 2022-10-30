@@ -44,6 +44,15 @@ func (h *ActivityHandler) GetDetailActivity() fiber.Handler {
 
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.DetailActivity(idActivity)
 		if errLogic != nil {
+			//FOR TEST
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status": "Not Found",
+					},
+				)
+			}
+
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
@@ -78,6 +87,16 @@ func (h *ActivityHandler) PostNewActivity() fiber.Handler {
 			return parsingErr
 		}
 
+		// FOR TESTING
+		if req.Title == "" {
+			return ctx.Status(fiber.StatusBadRequest).JSON(
+				fiber.Map{
+					"status":  "Bad Request",
+					"message": "title cannot be null",
+				},
+			)
+		}
+
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.CreateNewActivity(req)
 		if errLogic != nil {
 			return ctx.Status(httpCode).JSON(
@@ -104,6 +123,14 @@ func (h *ActivityHandler) PatchExistingActivity() fiber.Handler {
 
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.UpdateActivity(req)
 		if errLogic != nil {
+			//FOR TEST
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status": "Not Found",
+					},
+				)
+			}
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
