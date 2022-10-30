@@ -48,7 +48,9 @@ func (h *ActivityHandler) GetDetailActivity() fiber.Handler {
 			if httpCode == fiber.StatusNotFound {
 				return ctx.Status(httpCode).JSON(
 					fiber.Map{
-						"status": "Not Found",
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Activity with ID %v Not Found", idActivity),
+						"data":    struct{}{},
 					},
 				)
 			}
@@ -127,7 +129,9 @@ func (h *ActivityHandler) PatchExistingActivity() fiber.Handler {
 			if httpCode == fiber.StatusNotFound {
 				return ctx.Status(httpCode).JSON(
 					fiber.Map{
-						"status": "Not Found",
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Activity with ID %v Not Found", activityId),
+						"data":    struct{}{},
 					},
 				)
 			}
