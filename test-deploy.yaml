@@ -1,3 +1,6 @@
+# Docker compose for latest container build (khafidprayoga/todoapp-fiber)
+# After running compose, create .env and start migrate up data and call Seed()
+# and run command `go run play/play.go` on root project structure
 version: '3.3'
 services:
   backend:
