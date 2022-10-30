@@ -56,9 +56,27 @@ func (q *TodoData) ListAllTodo() error {
 
 }
 
-func (q *TodoData) UpdateTodo(id string) error {
-	return nil
+func (q *TodoData) UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, error) {
+	var result entities.Todo
 
+	isActive := 0
+	newData := entities.Todo{
+		Title:    data.Title,
+		IsActive: &isActive,
+	}
+
+	if *data.IsActive == true {
+		isActive = 1
+		newData.IsActive = &isActive
+	}
+
+	if e := q.dbMysql.Model(&entities.Todo{}).
+		Where("id = ?", data.GetId()).
+		Updates(newData).Scan(&result).Error; e != nil {
+		return nil, e
+	}
+
+	return &result, nil
 }
 
 func (q *TodoData) ValidateTodo(id string) error {

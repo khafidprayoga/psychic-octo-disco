@@ -21,7 +21,7 @@ type TodoUseCase interface {
 	DeleteExistingTodo(id string) (httpCode int, errType error, srvError int)
 	GetAllListTodo(req string)
 	GetDetailTodo(req string)
-	UpdateExistingTodo(req string)
+	UpdateExistingTodo(req req.UpdateExistingTodo) (res *entities.Todo, httpCode int, errType error, srvError int)
 }
 
 // TodoData to interact with mysql db
@@ -30,6 +30,6 @@ type TodoData interface {
 	DeleteTodo(id string) error
 	DetailTodo(id string) error
 	ListAllTodo() error
-	UpdateTodo(id string) error
+	UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, error)
 	ValidateTodo(id string) error
 }

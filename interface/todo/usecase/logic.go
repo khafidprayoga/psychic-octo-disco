@@ -50,6 +50,20 @@ func (u *TodoUseCase) DeleteExistingTodo(id string) (httpCode int, errType error
 	return fiber.StatusOK, nil, 0
 }
 
-func (u *TodoUseCase) GetAllListTodo(req string)     {}
-func (u *TodoUseCase) GetDetailTodo(req string)      {}
-func (u *TodoUseCase) UpdateExistingTodo(req string) {}
+func (u *TodoUseCase) GetAllListTodo(req string) {}
+func (u *TodoUseCase) GetDetailTodo(req string)  {}
+
+func (u *TodoUseCase) UpdateExistingTodo(req request.UpdateExistingTodo) (res *entities.Todo, httpCode int, errType error, srvError int) {
+	//Validate request
+	if err := utils.ValidateStruct[request.UpdateExistingTodo](req); err != nil {
+		panic(err)
+		return nil, fiber.StatusBadRequest, interfaceError.InvalidRequestBody, utils.HTTPRequestErr
+	}
+
+	updatedEntities, err := u.data.UpdateTodo(req)
+	if err != nil {
+		return nil, fiber.StatusInternalServerError, interfaceError.FailedUpdateExistingTodo, utils.DatabaseError
+	}
+
+	return updatedEntities, fiber.StatusOK, nil, 0
+}
