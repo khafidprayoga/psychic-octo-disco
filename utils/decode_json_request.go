@@ -3,6 +3,7 @@ package utils
 // References: https://tanmaydas.com/posts/parsing-json-request-body-in-go-fiber/
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -21,11 +22,11 @@ func (e *MalformedRequest) Error() string {
 	return e.Message
 }
 
-func DecodeJSONBody(c *fiber.Ctx, dst any, out any) error {
-	dec := decoder.NewDecoder(string(c.Body()))
+func decodeJSONBody(c *fiber.Ctx, out any) error {
+	dec := decoder.NewStreamDecoder(bytes.NewReader(c.Body()))
 	dec.DisallowUnknownFields()
 
-	if err := dec.Decode(&dst); err != nil {
+	if err := dec.Decode(&out); err != nil {
 		var (
 			syntaxErr         *json.SyntaxError
 			unmarshallTypeErr *json.UnmarshalTypeError
@@ -82,11 +83,29 @@ func DecodeJSONBody(c *fiber.Ctx, dst any, out any) error {
 		}
 	}
 
-	err := dec.Decode(&out)
+	err := dec.Decode(&struct{}{})
 	if err != io.EOF {
 		return &MalformedRequest{
 			Status:  fiber.StatusBadRequest,
 			Message: "Request body must only contain a single JSON object",
+		}
+	}
+
+	return nil
+}
+
+func JSONBodyParser(ctx *fiber.Ctx, out any) error {
+	var mr *MalformedRequest
+
+	if err := decodeJSONBody(ctx, out); err != nil {
+		if errors.As(err, &mr) {
+			return ctx.Status(mr.Status).JSON(fiber.Map{
+				"message": mr.Message,
+			})
+		} else {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Internal Server Error",
+			})
 		}
 	}
 

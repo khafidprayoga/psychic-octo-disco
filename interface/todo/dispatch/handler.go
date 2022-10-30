@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
+	"github.com/khafidprayoga/psychic-octo-disco/utils"
 )
 
 type TodoHandler struct {
@@ -40,11 +41,8 @@ func (h *TodoHandler) PostNewData() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var req request.CreateNewTodo
 
-		if err := ctx.BodyParser(&req); err != nil {
-			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"status":  "failed",
-				"message": err.Error(),
-			})
+		if parsingErr := utils.JSONBodyParser(ctx, &req); parsingErr != nil {
+			return parsingErr
 		}
 
 		resData, errLogic, errType := h.useCaseImpl.CreateNewTodo(req)
