@@ -14,6 +14,7 @@ type ActivityHandler interface {
 }
 
 type ActivityUseCase interface {
+	CreateNewActivity(req req.CreateNewActivity) (res *entities.Activity, httpCode int, errType error, srvError int)
 	DetailActvity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
 	DeleteActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
 	ListActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
@@ -21,7 +22,7 @@ type ActivityUseCase interface {
 }
 
 type ActivityData interface {
-	CreateNewActivity(req req.CreateNewTodo) (data *entities.Activity, err error)
+	CreateNewActivity(req req.CreateNewActivity) (data *entities.Activity, err error)
 	DeleteActivityData(id string) error
 	DetailActivityData(id string) (*entities.Activity, error)
 	ListActivityData(activityId string) ([]entities.Activity, error)

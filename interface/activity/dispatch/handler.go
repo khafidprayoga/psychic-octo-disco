@@ -3,6 +3,8 @@ package dispatch
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
+	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
+	"github.com/khafidprayoga/psychic-octo-disco/utils"
 )
 
 type ActivityHandler struct {
@@ -37,6 +39,21 @@ func (h *ActivityHandler) GetAllActivity() fiber.Handler {
 
 func (h *ActivityHandler) PostNewActivity() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		var req request.CreateNewActivity
+
+		if parsingErr := utils.JSONBodyParser(ctx, &req); parsingErr != nil {
+			return parsingErr
+		}
+
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.CreateNewActivity(req)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("created new activity", &resData),
+		)
 	}
 }

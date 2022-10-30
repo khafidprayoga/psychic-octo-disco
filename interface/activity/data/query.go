@@ -2,7 +2,8 @@ package data
 
 import (
 	"github.com/khafidprayoga/psychic-octo-disco/http/entities"
-	"github.com/khafidprayoga/psychic-octo-disco/http/req"
+	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
+	"github.com/khafidprayoga/psychic-octo-disco/interface/activity/interfaceError"
 	"gorm.io/gorm"
 )
 
@@ -16,9 +17,18 @@ func New(db gorm.DB) *ActivityData {
 	}
 }
 
-func (q *ActivityData) CreateNewActivity(req req.CreateNewTodo) (data *entities.Activity, err error) {
+func (q *ActivityData) CreateNewActivity(req request.CreateNewActivity) (data *entities.Activity, err error) {
+	data = &entities.Activity{
+		Title: req.Title,
+		Email: &req.Email,
+	}
+	if err := q.dbMysql.Create(data).Error; err != nil {
+		return nil, interfaceError.FailedCreateNewActivity
+	}
+
 	return
 }
+
 func (q *ActivityData) DeleteActivityData(id string) (err error) {
 	return
 
@@ -31,7 +41,7 @@ func (q *ActivityData) ListActivityData(activityId string) ([]entities.Activity,
 	return []entities.Activity{}, nil
 
 }
-func (q *ActivityData) UpdateActivityData(data req.UpdateExistingTodo) (*entities.Activity, error) {
+func (q *ActivityData) UpdateActivityData(data request.UpdateExistingTodo) (*entities.Activity, error) {
 	return nil, nil
 
 }
