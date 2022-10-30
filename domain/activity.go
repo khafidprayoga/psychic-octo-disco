@@ -11,6 +11,7 @@ type ActivityHandler interface {
 	GetDetailActivity() fiber.Handler
 	GetAllActivity() fiber.Handler
 	PostNewActivity() fiber.Handler
+	PatchExistingActivity() fiber.Handler
 }
 
 type ActivityUseCase interface {
@@ -18,7 +19,7 @@ type ActivityUseCase interface {
 	DetailActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
 	DeleteActivity(id string) (httpCode int, errType error, srvError int)
 	ListActivity() (res []entities.Activity, httpCode int, errType error, srvError int)
-	UpdateActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
+	UpdateActivity(req req.UpdateExistingActivity) (res *entities.Activity, httpCode int, errType error, srvError int)
 }
 
 type ActivityData interface {
@@ -26,6 +27,6 @@ type ActivityData interface {
 	DeleteActivityData(id string) error
 	DetailActivityData(id string) (*entities.Activity, error)
 	ListActivityData() ([]entities.Activity, error)
-	UpdateActivityData(data req.UpdateExistingTodo) (*entities.Activity, error)
+	UpdateActivityData(req req.UpdateExistingActivity) (data *entities.Activity, err error)
 	ValidateActivity(id string) error
 }

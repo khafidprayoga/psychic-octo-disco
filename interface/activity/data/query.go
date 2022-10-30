@@ -57,10 +57,23 @@ func (q *ActivityData) ListActivityData() (data []entities.Activity, err error) 
 	return
 
 }
-func (q *ActivityData) UpdateActivityData(data request.UpdateExistingTodo) (*entities.Activity, error) {
-	return nil, nil
 
+func (q *ActivityData) UpdateActivityData(data request.UpdateExistingActivity) (*entities.Activity, error) {
+	result := new(entities.Activity)
+
+	err := q.dbMysql.Table("activity").
+		Where("id = ?", data.GetId()).
+		Updates(map[string]any{
+			"title": data.Title,
+		}).Scan(result).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
+
 func (q *ActivityData) ValidateActivity(id string) (err error) {
 	var count int64
 	if err := q.dbMysql.Table("activity").

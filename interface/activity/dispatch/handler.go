@@ -90,3 +90,27 @@ func (h *ActivityHandler) PostNewActivity() fiber.Handler {
 		)
 	}
 }
+
+func (h *ActivityHandler) PatchExistingActivity() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		var req request.UpdateExistingActivity
+
+		activityId := ctx.Params("id")
+		req.SetId(activityId)
+
+		if parsingErr := utils.JSONBodyParser(ctx, &req); parsingErr != nil {
+			return parsingErr
+		}
+
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.UpdateActivity(req)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("success update existing activity", &resData),
+		)
+	}
+}

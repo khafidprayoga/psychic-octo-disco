@@ -74,6 +74,21 @@ func (u *ActivityUseCase) ListActivity() (res []entities.Activity, httpCode int,
 	return listData, fiber.StatusOK, nil, 0
 }
 
-func (u *ActivityUseCase) UpdateActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
-	return
+func (u *ActivityUseCase) UpdateActivity(req request.UpdateExistingActivity) (res *entities.Activity, httpCode int, errType error, srvError int) {
+	//Validate request
+	if err := utils.ValidateStruct[request.UpdateExistingActivity](req); err != nil {
+		return nil, fiber.StatusBadRequest, interfaceError.InvalidRequestBody, utils.HTTPRequestErr
+	}
+
+	// Validate activity exist
+	if err := u.data.ValidateActivity(req.GetId()); err != nil {
+		return nil, fiber.StatusNotFound, err, utils.HTTPRequestErr
+	}
+
+	updatedEntities, err := u.data.UpdateActivityData(req)
+	if err != nil {
+		return nil, fiber.StatusInternalServerError, interfaceError.FailedUpdateExistingActivity, utils.DatabaseError
+	}
+
+	return updatedEntities, fiber.StatusOK, nil, 0
 }
