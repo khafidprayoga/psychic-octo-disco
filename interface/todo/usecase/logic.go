@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	"github.com/khafidprayoga/psychic-octo-disco/http/entities"
@@ -23,7 +24,8 @@ func New(d domain.TodoData) *TodoUseCase {
 func (u *TodoUseCase) CreateNewTodo(req request.CreateNewTodo) (res *entities.Todo, httpCode int, errType error, srvError int) {
 	//Validate request
 	if err := utils.ValidateStruct[request.CreateNewTodo](req); err != nil {
-		return nil, fiber.StatusBadRequest, interfaceError.InvalidRequestBody, utils.HTTPRequestErr
+		errMsg := fmt.Errorf("%v, reason: %v", interfaceError.InvalidRequestBody, err)
+		return nil, fiber.StatusBadRequest, errMsg, utils.HTTPRequestErr
 	}
 
 	//Insert new todo data to db
@@ -74,8 +76,8 @@ func (u *TodoUseCase) GetDetailTodo(id string) (res *entities.Todo, httpCode int
 func (u *TodoUseCase) UpdateExistingTodo(req request.UpdateExistingTodo) (res *entities.Todo, httpCode int, errType error, srvError int) {
 	//Validate request
 	if err := utils.ValidateStruct[request.UpdateExistingTodo](req); err != nil {
-		panic(err)
-		return nil, fiber.StatusBadRequest, interfaceError.InvalidRequestBody, utils.HTTPRequestErr
+		errMsg := fmt.Errorf("%v, reason: %v", interfaceError.InvalidRequestBody, err)
+		return nil, fiber.StatusBadRequest, errMsg, utils.HTTPRequestErr
 	}
 
 	// Validate todo exist

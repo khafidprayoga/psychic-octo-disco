@@ -100,7 +100,6 @@ func (h *TodoHandler) UpdateData() fiber.Handler {
 		req.SetId(todoId)
 
 		if parsingErr := utils.JSONBodyParser(ctx, &req); parsingErr != nil {
-			panic(parsingErr)
 			return parsingErr
 		}
 

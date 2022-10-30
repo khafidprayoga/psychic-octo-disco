@@ -77,7 +77,8 @@ func (u *ActivityUseCase) ListActivity() (res []entities.Activity, httpCode int,
 func (u *ActivityUseCase) UpdateActivity(req request.UpdateExistingActivity) (res *entities.Activity, httpCode int, errType error, srvError int) {
 	//Validate request
 	if err := utils.ValidateStruct[request.UpdateExistingActivity](req); err != nil {
-		return nil, fiber.StatusBadRequest, interfaceError.InvalidRequestBody, utils.HTTPRequestErr
+		errMsg := fmt.Errorf("%v, reason: %v", interfaceError.InvalidRequestBody, err)
+		return nil, fiber.StatusBadRequest, errMsg, utils.HTTPRequestErr
 	}
 
 	// Validate activity exist
