@@ -33,8 +33,12 @@ func (q *ActivityData) DeleteActivityData(id string) (err error) {
 	return
 
 }
-func (q *ActivityData) DetailActivityData(id string) (*entities.Activity, error) {
-	return nil, nil
+func (q *ActivityData) DetailActivityData(id string) (data *entities.Activity, err error) {
+	if err := q.dbMysql.Where("id = ?", id).Find(&data).Error; err != nil {
+		return nil, interfaceError.FailedGetDetailActivity
+	}
+
+	return
 
 }
 func (q *ActivityData) ListActivityData(activityId string) ([]entities.Activity, error) {

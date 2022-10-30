@@ -35,8 +35,19 @@ func (u *ActivityUseCase) CreateNewActivity(req request.CreateNewActivity) (res 
 }
 
 func (u *ActivityUseCase) DetailActvity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
-	return
+	// Validate activity exist
+	if err := u.data.ValidateActivity(id); err != nil {
+		return nil, fiber.StatusNotFound, interfaceError.DataNotFound, utils.HTTPRequestErr
+	}
+
+	entitiesData, err := u.data.DetailActivityData(id)
+	if err != nil {
+		return nil, fiber.StatusInternalServerError, err, utils.DatabaseError
+	}
+
+	return entitiesData, fiber.StatusOK, nil, 0
 }
+
 func (u *ActivityUseCase) DeleteActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
 	return
 

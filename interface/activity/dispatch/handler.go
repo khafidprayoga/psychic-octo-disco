@@ -27,7 +27,18 @@ func (h *ActivityHandler) DeleteExistingActivity() fiber.Handler {
 
 func (h *ActivityHandler) GetDetailActivity() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		idActivity := ctx.Params("id")
+
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.DetailActvity(idActivity)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("success get detail activity by id", &resData),
+		)
 	}
 }
 

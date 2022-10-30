@@ -8,5 +8,6 @@ var (
 	FailedDeleteExistingActivity = errors.New("failed to delete existing activity")
 	FailedUpdateExistingActivity = errors.New("failed update existing activity")
 	FailedGetListActivity        = errors.New("failed get list activity")
+	FailedGetDetailActivity      = errors.New("failed get detail activity")
 	DataNotFound                 = errors.New("sorry, activity data does not exist")
 )
