@@ -29,7 +29,7 @@ func (h *ActivityHandler) GetDetailActivity() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		idActivity := ctx.Params("id")
 
-		resData, httpCode, errLogic, internalErr := h.useCaseImpl.DetailActvity(idActivity)
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.DetailActivity(idActivity)
 		if errLogic != nil {
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),

@@ -34,7 +34,7 @@ func (u *ActivityUseCase) CreateNewActivity(req request.CreateNewActivity) (res 
 	return resData, fiber.StatusCreated, nil, 0
 }
 
-func (u *ActivityUseCase) DetailActvity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
+func (u *ActivityUseCase) DetailActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
 	// Validate activity exist
 	if err := u.data.ValidateActivity(id); err != nil {
 		return nil, fiber.StatusNotFound, interfaceError.DataNotFound, utils.HTTPRequestErr

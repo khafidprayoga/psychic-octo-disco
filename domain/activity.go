@@ -15,7 +15,7 @@ type ActivityHandler interface {
 
 type ActivityUseCase interface {
 	CreateNewActivity(req req.CreateNewActivity) (res *entities.Activity, httpCode int, errType error, srvError int)
-	DetailActvity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
+	DetailActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
 	DeleteActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
 	ListActivity() (res []entities.Activity, httpCode int, errType error, srvError int)
 	UpdateActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int)
