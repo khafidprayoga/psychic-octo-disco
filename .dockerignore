@@ -1,6 +1,6 @@
 play/
 *.md
-Dockerfile
+builder/
 docker-compose.yaml
 cmd/
 coverage/

@@ -8,14 +8,11 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	_ "github.com/joho/godotenv/autoload"
-	"log"
 	"os"
-	"strconv"
 	"time"
 )
 
 var Server *fiber.App
-var ServerPort int
 var ServerProd bool
 var ServerDebug bool
 
@@ -29,15 +26,6 @@ func init() {
 	if serverProd == "1" {
 		ServerProd = true
 	}
-
-	portEnv := os.Getenv("APP_PORT")
-	port, err := strconv.Atoi(portEnv)
-	if err != nil {
-		log.Fatalf("error parsing app port: %v", err)
-	}
-
-	// Init server port from env
-	ServerPort = port
 
 	// Init server if App instance does not exist
 	if Server == nil {

@@ -1,7 +1,6 @@
 package registry
 
 import (
-	"fmt"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/todo"
 	"github.com/khafidprayoga/psychic-octo-disco/utils"
 
@@ -20,8 +19,9 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 			Db:  dbMysql,
 		},
 	)
+	
+	socketListener := ":3030"
 
-	socketListener := fmt.Sprintf(":%v", config.ServerPort)
 	if !fiber.IsChild() {
 		if config.ServerProd {
 			routeList := utils.GetAppRouteList(app)
