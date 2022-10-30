@@ -16,7 +16,7 @@ func main() {
 	mysqlClient := database.InitMySqlDB(mysqlCfg)
 	database.MigrateUp(mysqlClient)
 	//database.MigrateDown(mysqlClient)
-	//Seed(mysqlClient)
+	Seed(mysqlClient)
 }
 
 func Seed(db *gorm.DB) {
