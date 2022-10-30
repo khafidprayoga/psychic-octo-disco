@@ -17,7 +17,7 @@ type TodoHandler interface {
 
 // TodoUseCase for handle todo interface business logic
 type TodoUseCase interface {
-	CreateNewTodo(req req.CreateNewTodo) (res *entities.Todo, err error, errType error)
+	CreateNewTodo(req req.CreateNewTodo) (res *entities.Todo, httpCode int, err error, errType error)
 	DeleteExistingTodo(req string)
 	GetAllListTodo(req string)
 	GetDetailTodo(req string)

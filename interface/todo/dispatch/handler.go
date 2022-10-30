@@ -45,19 +45,16 @@ func (h *TodoHandler) PostNewData() fiber.Handler {
 			return parsingErr
 		}
 
-		resData, errLogic, errType := h.useCaseImpl.CreateNewTodo(req)
+		resData, httpCode, errLogic, errType := h.useCaseImpl.CreateNewTodo(req)
 		if errLogic != nil {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"status":  "failed",
-				"message": errType.Error(),
-			})
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errType, errLogic),
+			)
 		}
 
-		return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-			"status":  "success",
-			"message": "created new todo",
-			"data":    &resData,
-		})
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("created new todo", &resData),
+		)
 	}
 }
 

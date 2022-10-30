@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	"github.com/khafidprayoga/psychic-octo-disco/http/entities"
-	"github.com/khafidprayoga/psychic-octo-disco/http/req"
+	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/todo/errors"
+	"github.com/khafidprayoga/psychic-octo-disco/utils"
 )
 
 type TodoUseCase struct {
@@ -17,16 +19,19 @@ func New(d domain.TodoData) *TodoUseCase {
 	}
 }
 
-func (u *TodoUseCase) CreateNewTodo(req req.CreateNewTodo) (res *entities.Todo, err error, errType error) {
+func (u *TodoUseCase) CreateNewTodo(req request.CreateNewTodo) (res *entities.Todo, httpCode int, err error, errType error) {
 	//Validate request
+	if err := utils.ValidateStruct[request.CreateNewTodo](req); err != nil {
+		return nil, fiber.StatusBadRequest, err, errors.InvalidRequestBody
+	}
 
 	//Insert new todo data to db
 	resData, err := u.data.CreateNew(req)
 	if err != nil {
-		return nil, err, errors.FailedCreateNewTodo
+		return nil, fiber.StatusInternalServerError, err, errors.FailedCreateNewTodo
 	}
 
-	return resData, nil, nil
+	return resData, fiber.StatusCreated, nil, nil
 }
 func (u *TodoUseCase) DeleteExistingTodo(req string) {}
 func (u *TodoUseCase) GetAllListTodo(req string)     {}

@@ -1,15 +1,19 @@
 package utils
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"errors"
+	"fmt"
+	"github.com/gofiber/fiber/v2"
+)
 
-func ErrorResponse(msg string) fiber.Map {
-	if msg == "" {
-		msg = "Internal Server Error"
+func ErrorResponse(msg error, internalErr error) fiber.Map {
+	if msg == nil {
+		msg = errors.New("Internal Server Error")
 	}
 	return fiber.Map{
 		"status":  "error",
 		"success": false,
-		"reason":  msg,
+		"reason":  fmt.Sprintf("%v %v", msg.Error(), internalErr.Error()),
 		"data":    nil,
 	}
 }
