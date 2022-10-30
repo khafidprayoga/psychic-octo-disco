@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"github.com/khafidprayoga/psychic-octo-disco/interface/activity"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/todo"
 	"github.com/khafidprayoga/psychic-octo-disco/utils"
 
@@ -20,7 +21,14 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 		},
 	)
 
-	socketListener := ":3030"
+	activity.ServiceImpl(
+		activity.WithDependency{
+			App: app,
+			DB:  dbMysql,
+		},
+	)
+
+	socketListener := ":3030" // sesuai kriteria
 
 	if !fiber.IsChild() {
 		if config.ServerProd {
@@ -32,6 +40,6 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 	}
 
 	if err := app.Listen(socketListener); err != nil {
-		log.Fatalf("failed to start backend interface: %v", err)
+		log.Fatalf("failed to start backend service: %v", err)
 	}
 }
