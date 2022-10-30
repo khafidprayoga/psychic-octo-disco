@@ -4,3 +4,4 @@ Dockerfile
 docker-compose.yaml
 cmd/
 coverage/
+*/**/*_test.go
