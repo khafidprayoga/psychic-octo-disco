@@ -8,6 +8,7 @@ import (
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/activity/interfaceError"
 	"github.com/khafidprayoga/psychic-octo-disco/utils"
+	"log"
 )
 
 type ActivityUseCase struct {
@@ -48,8 +49,19 @@ func (u *ActivityUseCase) DetailActivity(id string) (res *entities.Activity, htt
 	return entitiesData, fiber.StatusOK, nil, 0
 }
 
-func (u *ActivityUseCase) DeleteActivity(id string) (res *entities.Activity, httpCode int, errType error, srvError int) {
-	return
+func (u *ActivityUseCase) DeleteActivity(id string) (httpCode int, errType error, srvError int) {
+	// Validate activity exist
+	if err := u.data.ValidateActivity(id); err != nil {
+		return fiber.StatusNotFound, err, utils.HTTPRequestErr
+	}
+
+	if err := u.data.DeleteActivityData(id); err != nil {
+		log.Println(err)
+		return fiber.StatusInternalServerError, err, utils.DatabaseError
+
+	}
+
+	return fiber.StatusOK, nil, 0
 
 }
 

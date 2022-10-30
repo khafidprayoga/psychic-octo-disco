@@ -5,6 +5,7 @@ import (
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/activity/interfaceError"
 	"gorm.io/gorm"
+	"time"
 )
 
 type ActivityData struct {
@@ -30,6 +31,11 @@ func (q *ActivityData) CreateNewActivity(req request.CreateNewActivity) (data *e
 }
 
 func (q *ActivityData) DeleteActivityData(id string) (err error) {
+	now := time.Now()
+	err = q.dbMysql.Table("activity").Where("id = ?", id).Updates(map[string]any{
+		"deleted_at": &now,
+	}).Error
+
 	return
 
 }

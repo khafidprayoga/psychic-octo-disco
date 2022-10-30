@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
@@ -21,7 +22,19 @@ func New(uc domain.ActivityUseCase, data domain.ActivityData) domain.ActivityHan
 
 func (h *ActivityHandler) DeleteExistingActivity() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		activityId := ctx.Params("id")
+
+		httpCode, errLogic, internalErr := h.useCaseImpl.DeleteActivity(activityId)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		successMsg := fmt.Sprintf("deleted activity with id %v", activityId)
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse(successMsg, nil),
+		)
 	}
 }
 
