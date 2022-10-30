@@ -15,9 +15,9 @@ import (
 func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 	// TODO: mount all domain interface implementation instance
 	todo.ServicesImpl(
-		todo.InitServicesTodo{
+		todo.WithDependency{
 			App: app,
-			Db:  dbMysql,
+			DB:  dbMysql,
 		},
 	)
 
@@ -40,6 +40,6 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 	}
 
 	if err := app.Listen(socketListener); err != nil {
-		log.Fatalf("failed to start backend service: %v", err)
+		log.Fatalf("failed to start backend service: %v", err.Error())
 	}
 }

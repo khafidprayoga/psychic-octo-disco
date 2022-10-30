@@ -8,13 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
-type InitServicesTodo struct {
+type WithDependency struct {
 	App *fiber.App
-	Db  gorm.DB
+	DB  gorm.DB
 }
 
-func ServicesImpl(d InitServicesTodo) {
-	dataInterface := data.New(d.Db)
+func ServicesImpl(d WithDependency) {
+	dataInterface := data.New(d.DB)
 	useCaseInterface := usecase.New(dataInterface)
 	handlerInterface := dispatch.New(useCaseInterface, dataInterface)
 	dispatch.Routes(d.App, handlerInterface)
