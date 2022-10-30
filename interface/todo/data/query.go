@@ -25,10 +25,11 @@ func (q *TodoData) CreateNew(req req.CreateNewTodo) (data *entities.Todo, err er
 		ActivityGroupId: req.ActivityGroupID,
 	}
 
-	err = q.dbMysql.Create(newTodo).Error
-	data = newTodo
+	if err := q.dbMysql.Create(newTodo).Error; err != nil {
+		return nil, interfaceError.FailedCreateNewTodo
+	}
 
-	return
+	return newTodo, nil
 }
 
 func (q *TodoData) DeleteTodo(id string) error {
@@ -40,7 +41,7 @@ func (q *TodoData) DeleteTodo(id string) error {
 		}).Error; err != nil {
 
 		log.Println(err)
-		return interfaceError.FailedCreateNewTodo
+		return interfaceError.FailedDeleteExistingTodo
 	}
 
 	return nil
