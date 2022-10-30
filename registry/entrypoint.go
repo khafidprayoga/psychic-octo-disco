@@ -19,7 +19,7 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 			Db:  dbMysql,
 		},
 	)
-	
+
 	socketListener := ":3030"
 
 	if !fiber.IsChild() {
