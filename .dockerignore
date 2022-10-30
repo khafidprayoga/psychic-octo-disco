@@ -1,7 +1,7 @@
 play/
 *.md
 builder/
-docker-compose.yaml
+test-deploy.yaml
 cmd/
 coverage/
 */**/*_test.go
