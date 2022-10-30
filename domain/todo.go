@@ -20,7 +20,7 @@ type TodoUseCase interface {
 	CreateNewTodo(req req.CreateNewTodo) (res *entities.Todo, httpCode int, errType error, srvError int)
 	DeleteExistingTodo(id string) (httpCode int, errType error, srvError int)
 	GetAllListTodo(req string)
-	GetDetailTodo(req string)
+	GetDetailTodo(id string) (res *entities.Todo, httpCode int, errType error, srvError int)
 	UpdateExistingTodo(req req.UpdateExistingTodo) (res *entities.Todo, httpCode int, errType error, srvError int)
 }
 
@@ -28,7 +28,7 @@ type TodoUseCase interface {
 type TodoData interface {
 	CreateNew(req req.CreateNewTodo) (data *entities.Todo, err error)
 	DeleteTodo(id string) error
-	DetailTodo(id string) error
+	DetailTodo(id string) (*entities.Todo, error)
 	ListAllTodo() error
 	UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, error)
 	ValidateTodo(id string) error

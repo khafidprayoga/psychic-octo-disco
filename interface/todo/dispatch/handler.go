@@ -1,13 +1,11 @@
 package dispatch
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
 	"github.com/khafidprayoga/psychic-octo-disco/utils"
-	"strconv"
 )
 
 type TodoHandler struct {
@@ -26,10 +24,10 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		todoId := ctx.Params("id")
 
-		httpCode, errLogic, _ := h.useCaseImpl.DeleteExistingTodo(todoId)
+		httpCode, errLogic, internalErr := h.useCaseImpl.DeleteExistingTodo(todoId)
 		if errLogic != nil {
 			return ctx.Status(httpCode).JSON(
-				utils.ErrorResponse(errLogic, 4001),
+				utils.ErrorResponse(errLogic, internalErr),
 			)
 		}
 
@@ -42,7 +40,18 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 
 func (h *TodoHandler) GetDetail() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		todoId := ctx.Params("id")
+
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.GetDetailTodo(todoId)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("success get detail todo by id", &resData),
+		)
 	}
 }
 
@@ -78,12 +87,7 @@ func (h *TodoHandler) UpdateData() fiber.Handler {
 		var req request.UpdateExistingTodo
 
 		todoId := ctx.Params("id")
-		idInt, errConv := strconv.Atoi(todoId)
-		if errConv != nil {
-			err := errors.New("invalid todo id")
-			return ctx.Status(fiber.StatusBadRequest).JSON(utils.ErrorResponse(err, utils.HTTPRequestErr))
-		}
-		req.SetId(idInt)
+		req.SetId(todoId)
 
 		if parsingErr := utils.JSONBodyParser(ctx, &req); parsingErr != nil {
 			panic(parsingErr)

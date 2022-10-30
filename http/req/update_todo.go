@@ -1,15 +1,15 @@
 package req
 
 type UpdateExistingTodo struct {
-	id       int    `validate:"-"`
+	id       string `validate:"-"`
 	Title    string `json:"title" validate:"required"`
 	IsActive *bool  `json:"is_active" validate:"required"`
 }
 
-func (t *UpdateExistingTodo) SetId(id int) {
+func (t *UpdateExistingTodo) SetId(id string) {
 	t.id = id
 }
 
-func (t *UpdateExistingTodo) GetId() int {
+func (t *UpdateExistingTodo) GetId() string {
 	return t.id
 }

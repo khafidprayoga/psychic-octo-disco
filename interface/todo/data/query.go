@@ -46,9 +46,13 @@ func (q *TodoData) DeleteTodo(id string) error {
 	return nil
 }
 
-func (q *TodoData) DetailTodo(id string) error {
-	return nil
+func (q *TodoData) DetailTodo(id string) (*entities.Todo, error) {
+	result := new(entities.Todo)
+	if err := q.dbMysql.Where("id = ?", id).Find(result).Error; err != nil {
+		return nil, err
+	}
 
+	return result, nil
 }
 
 func (q *TodoData) ListAllTodo() error {
