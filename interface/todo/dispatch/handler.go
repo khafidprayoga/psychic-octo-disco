@@ -57,7 +57,17 @@ func (h *TodoHandler) GetDetail() fiber.Handler {
 
 func (h *TodoHandler) GetList() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		activityGroupId := ctx.Query("activity_group_id")
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.GetAllListTodo(activityGroupId)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, internalErr),
+			)
+		}
+
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse("succes get list todo", &resData),
+		)
 	}
 }
 

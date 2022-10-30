@@ -56,9 +56,22 @@ func (q *TodoData) DetailTodo(id string) (*entities.Todo, error) {
 	return result, nil
 }
 
-func (q *TodoData) ListAllTodo() error {
-	return nil
+func (q *TodoData) ListAllTodo(activityId string) ([]entities.Todo, error) {
+	listData := new([]entities.Todo)
 
+	if activityId != "" {
+		err := q.dbMysql.Where("activity_group_id = ?", activityId).Find(&listData).Error
+		if err != nil {
+			return []entities.Todo{}, err
+		}
+	} else {
+		err := q.dbMysql.Find(&listData).Error
+		if err != nil {
+			return []entities.Todo{}, err
+		}
+	}
+
+	return *listData, nil
 }
 
 func (q *TodoData) UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, error) {

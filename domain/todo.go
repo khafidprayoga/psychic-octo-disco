@@ -19,7 +19,7 @@ type TodoHandler interface {
 type TodoUseCase interface {
 	CreateNewTodo(req req.CreateNewTodo) (res *entities.Todo, httpCode int, errType error, srvError int)
 	DeleteExistingTodo(id string) (httpCode int, errType error, srvError int)
-	GetAllListTodo(req string)
+	GetAllListTodo(activityId string) (res []entities.Todo, httpCode int, errType error, srvError int)
 	GetDetailTodo(id string) (res *entities.Todo, httpCode int, errType error, srvError int)
 	UpdateExistingTodo(req req.UpdateExistingTodo) (res *entities.Todo, httpCode int, errType error, srvError int)
 }
@@ -29,7 +29,7 @@ type TodoData interface {
 	CreateNew(req req.CreateNewTodo) (data *entities.Todo, err error)
 	DeleteTodo(id string) error
 	DetailTodo(id string) (*entities.Todo, error)
-	ListAllTodo() error
+	ListAllTodo(activityId string) ([]entities.Todo, error)
 	UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, error)
 	ValidateTodo(id string) error
 }
