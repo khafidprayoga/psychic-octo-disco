@@ -39,7 +39,7 @@ func InitMySqlDB(cfg *config.DBConfig) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(sqlString), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
+			SingularTable: false,
 		},
 		Logger: newLogger,
 	})

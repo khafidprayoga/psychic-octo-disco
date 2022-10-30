@@ -32,7 +32,7 @@ func (q *ActivityData) CreateNewActivity(req request.CreateNewActivity) (data *e
 
 func (q *ActivityData) DeleteActivityData(id string) (err error) {
 	now := time.Now()
-	err = q.dbMysql.Table("activity").Where("id = ?", id).Updates(map[string]any{
+	err = q.dbMysql.Table("activities").Where("id = ?", id).Updates(map[string]any{
 		"deleted_at": &now,
 	}).Error
 
@@ -61,7 +61,7 @@ func (q *ActivityData) ListActivityData() (data []entities.Activity, err error) 
 func (q *ActivityData) UpdateActivityData(data request.UpdateExistingActivity) (*entities.Activity, error) {
 	result := new(entities.Activity)
 
-	err := q.dbMysql.Table("activity").
+	err := q.dbMysql.Table("activities").
 		Where("id = ?", data.GetId()).
 		Updates(map[string]any{
 			"title": data.Title,
@@ -76,7 +76,7 @@ func (q *ActivityData) UpdateActivityData(data request.UpdateExistingActivity) (
 
 func (q *ActivityData) ValidateActivity(id string) (err error) {
 	var count int64
-	if err := q.dbMysql.Table("activity").
+	if err := q.dbMysql.Table("activities").
 		Where("id = ?", id).
 		Where("deleted_at IS NULL").
 		Count(&count).Error; err != nil {

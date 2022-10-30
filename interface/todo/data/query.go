@@ -34,7 +34,7 @@ func (q *TodoData) CreateNew(req req.CreateNewTodo) (data *entities.Todo, err er
 
 func (q *TodoData) DeleteTodo(id string) error {
 	now := time.Now()
-	if err := q.dbMysql.Table("todo").
+	if err := q.dbMysql.Table("todos").
 		Where("id = ?", id).
 		Updates(map[string]interface{}{
 			"deleted_at": &now,
@@ -99,7 +99,7 @@ func (q *TodoData) UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, erro
 
 func (q *TodoData) ValidateTodo(id string) error {
 	var count int64
-	if err := q.dbMysql.Table("todo").
+	if err := q.dbMysql.Table("todos").
 		Where("id = ?", id).
 		Where("deleted_at IS NULL").
 		Count(&count).Error; err != nil {
