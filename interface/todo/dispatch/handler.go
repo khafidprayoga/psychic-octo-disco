@@ -1,6 +1,7 @@
 package dispatch
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/khafidprayoga/psychic-octo-disco/domain"
 	request "github.com/khafidprayoga/psychic-octo-disco/http/req"
@@ -21,7 +22,19 @@ func New(uc domain.TodoUseCase, d domain.TodoData) domain.TodoHandler {
 
 func (h *TodoHandler) DeleteData() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return nil
+		todoId := ctx.Params("id")
+
+		httpCode, errLogic, _ := h.useCaseImpl.DeleteExistingTodo(todoId)
+		if errLogic != nil {
+			return ctx.Status(httpCode).JSON(
+				utils.ErrorResponse(errLogic, 4001),
+			)
+		}
+
+		successMsg := fmt.Sprintf("deleted todo with id %v", todoId)
+		return ctx.Status(httpCode).JSON(
+			utils.SuccessResponse(successMsg, nil),
+		)
 	}
 }
 
@@ -45,10 +58,10 @@ func (h *TodoHandler) PostNewData() fiber.Handler {
 			return parsingErr
 		}
 
-		resData, httpCode, errLogic, errType := h.useCaseImpl.CreateNewTodo(req)
+		resData, httpCode, errLogic, internalErr := h.useCaseImpl.CreateNewTodo(req)
 		if errLogic != nil {
 			return ctx.Status(httpCode).JSON(
-				utils.ErrorResponse(errType, errLogic),
+				utils.ErrorResponse(errLogic, internalErr),
 			)
 		}
 

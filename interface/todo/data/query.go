@@ -3,7 +3,10 @@ package data
 import (
 	"github.com/khafidprayoga/psychic-octo-disco/http/entities"
 	"github.com/khafidprayoga/psychic-octo-disco/http/req"
+	"github.com/khafidprayoga/psychic-octo-disco/interface/todo/interfaceError"
 	"gorm.io/gorm"
+	"log"
+	"time"
 )
 
 type TodoData struct {
@@ -29,6 +32,17 @@ func (q *TodoData) CreateNew(req req.CreateNewTodo) (data *entities.Todo, err er
 }
 
 func (q *TodoData) DeleteTodo(id string) error {
+	now := time.Now()
+	if err := q.dbMysql.Table("todo").
+		Where("id = ?", id).
+		Updates(map[string]interface{}{
+			"deleted_at": &now,
+		}).Error; err != nil {
+
+		log.Println(err)
+		return interfaceError.FailedCreateNewTodo
+	}
+
 	return nil
 }
 
@@ -48,6 +62,16 @@ func (q *TodoData) UpdateTodo(id string) error {
 }
 
 func (q *TodoData) ValidateTodo(id string) error {
-	return nil
+	var count int64
+	if err := q.dbMysql.Table("todo").
+		Where("id = ?", id).
+		Where("deleted_at IS NULL").
+		Count(&count).Error; err != nil {
+		return err
+	}
 
+	if count == 0 {
+		return interfaceError.DataNotFound
+	}
+	return nil
 }
