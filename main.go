@@ -12,5 +12,7 @@ func main() {
 	mysqlCfg := config.GetMysqlConfig()
 	mysqlClient := database.InitMySqlDB(mysqlCfg)
 
+	database.MigrateUp(mysqlClient) // script auto migrate untuk kebutuhan pengujian
+
 	registry.StartBackend(config.Server, *mysqlClient)
 }
