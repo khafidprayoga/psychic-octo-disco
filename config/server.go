@@ -30,12 +30,13 @@ func init() {
 	// Init server if App instance does not exist
 	if Server == nil {
 		fiberConfig := fiber.Config{
-			AppName:               "Todo App Challenge ",
+			AppName:               "Todo App Challenge By Khafid",
 			DisableStartupMessage: ServerProd,
 			JSONEncoder:           sonic.Marshal,
 			JSONDecoder:           sonic.Unmarshal,
-			Prefork:               ServerProd,
-			BodyLimit:             1 * 1024, // 1MB
+			Prefork:               true, // for test
+			//Prefork:               ServerProd,
+			BodyLimit: 1 * 1024, // 1MB
 			//EnablePrintRoutes:     ServerDebug,
 			ReadTimeout:  1 * time.Second,
 			WriteTimeout: 1 * time.Second,

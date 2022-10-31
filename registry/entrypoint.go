@@ -1,12 +1,12 @@
 package registry
 
 import (
+	"github.com/khafidprayoga/psychic-octo-disco/database"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/activity"
 	"github.com/khafidprayoga/psychic-octo-disco/interface/todo"
 	"github.com/khafidprayoga/psychic-octo-disco/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/khafidprayoga/psychic-octo-disco/config"
 	"gorm.io/gorm"
 	"log"
 )
@@ -31,10 +31,12 @@ func StartBackend(app *fiber.App, dbMysql gorm.DB) {
 	socketListener := ":3030" // sesuai kriteria
 
 	if !fiber.IsChild() {
-		if config.ServerProd {
-			routeList := utils.GetAppRouteList(app)
-			log.Printf("\n%v\n", routeList)
-		}
+		database.MigrateUp(&dbMysql) // script auto migrate untuk kebutuhan pengujian
+
+		//if config.ServerProd {
+		routeList := utils.GetAppRouteList(app)
+		log.Printf("\n%v\n", routeList)
+		//}
 		// Log starting server only on main process when pre-forked config are true
 		log.Printf("starting the server... at %v", socketListener)
 	}
