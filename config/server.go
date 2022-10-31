@@ -4,9 +4,6 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
-	"github.com/gofiber/fiber/v2/middleware/etag"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/requestid"
 	_ "github.com/joho/godotenv/autoload"
 	"os"
 	"time"
@@ -46,24 +43,24 @@ func init() {
 		Server = fiber.New(fiberConfig)
 
 		newCompressor := compress.New(compress.Config{
-			Level: compress.LevelBestSpeed,
+			Level: compress.LevelBestCompression,
 		})
 
-		newLogger := logger.New(logger.Config{
-			TimeZone:   "Asia/Jakarta",
-			Format:     "${pid} [${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path}  ${latency}\n",
-			TimeFormat: "02-Jan-2006",
-		})
+		//newLogger := logger.New(logger.Config{
+		//	TimeZone:   "Asia/Jakarta",
+		//	Format:     "${pid} [${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path}  ${latency}\n",
+		//	TimeFormat: "02-Jan-2006",
+		//})
 
 		// Mount middleware
 		Server.
-			Use(requestid.New()).
-			Use(etag.New()).
-			Use(newCompressor).
-			Use(newLogger)
+			Use(newCompressor)
+		//Use(requestid.New()).
+		//Use(etag.New()).
+		//Use(newLogger)
 
-		Server.Get("/", func(ctx *fiber.Ctx) error {
-			return ctx.SendString("Todo list API challenge")
-		})
+		//Server.Get("/", func(ctx *fiber.Ctx) error {
+		//	return ctx.SendString("Todo list API challenge")
+		//})
 	}
 }
