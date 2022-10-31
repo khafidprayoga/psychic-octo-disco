@@ -40,7 +40,7 @@ func (u *TodoUseCase) CreateNewTodo(req request.CreateNewTodo) (res *entities.To
 func (u *TodoUseCase) DeleteExistingTodo(id string) (httpCode int, errType error, srvError int) {
 	// Validate todo exist
 	if err := u.data.ValidateTodo(id); err != nil {
-		return fiber.StatusNotFound, err, utils.HTTPRequestErr
+		return fiber.StatusNotFound, err, utils.NotFoundErr
 	}
 
 	if err := u.data.DeleteTodo(id); err != nil {

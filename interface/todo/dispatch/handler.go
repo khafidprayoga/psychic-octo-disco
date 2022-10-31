@@ -36,6 +36,7 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 					},
 				)
 			}
+
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
