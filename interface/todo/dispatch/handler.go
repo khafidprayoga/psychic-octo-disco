@@ -26,6 +26,16 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 
 		httpCode, errLogic, internalErr := h.useCaseImpl.DeleteExistingTodo(todoId)
 		if errLogic != nil {
+			// FOR TEST
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Todo with ID %v Not Found", todoId),
+						"data":    struct{}{},
+					},
+				)
+			}
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
@@ -33,7 +43,7 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 
 		successMsg := fmt.Sprintf("deleted todo with id %v", todoId)
 		return ctx.Status(httpCode).JSON(
-			utils.SuccessResponse(successMsg, nil),
+			utils.SuccessResponse(successMsg, struct{}{}),
 		)
 	}
 }
@@ -44,6 +54,16 @@ func (h *TodoHandler) GetDetail() fiber.Handler {
 
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.GetDetailTodo(todoId)
 		if errLogic != nil {
+			// FOR TEST
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Todo with ID %v Not Found", todoId),
+						"data":    struct{}{},
+					},
+				)
+			}
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
@@ -124,6 +144,7 @@ func (h *TodoHandler) UpdateData() fiber.Handler {
 
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.UpdateExistingTodo(req)
 		if errLogic != nil {
+			// FOR TEST
 			if httpCode == fiber.StatusNotFound {
 				return ctx.Status(httpCode).JSON(
 					fiber.Map{
