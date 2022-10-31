@@ -26,6 +26,16 @@ func (h *ActivityHandler) DeleteExistingActivity() fiber.Handler {
 
 		httpCode, errLogic, internalErr := h.useCaseImpl.DeleteActivity(activityId)
 		if errLogic != nil {
+			//FOR TEST
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Activity with ID %v Not Found", activityId),
+						"data":    struct{}{},
+					},
+				)
+			}
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
@@ -33,7 +43,7 @@ func (h *ActivityHandler) DeleteExistingActivity() fiber.Handler {
 
 		successMsg := fmt.Sprintf("deleted activity with id %v", activityId)
 		return ctx.Status(httpCode).JSON(
-			utils.SuccessResponse(successMsg, nil),
+			utils.SuccessResponse(successMsg, struct{}{}),
 		)
 	}
 }

@@ -52,7 +52,7 @@ func (u *ActivityUseCase) DetailActivity(id string) (res *entities.Activity, htt
 func (u *ActivityUseCase) DeleteActivity(id string) (httpCode int, errType error, srvError int) {
 	// Validate activity exist
 	if err := u.data.ValidateActivity(id); err != nil {
-		return fiber.StatusNotFound, err, utils.HTTPRequestErr
+		return fiber.StatusNotFound, err, utils.NotFoundErr
 	}
 
 	if err := u.data.DeleteActivityData(id); err != nil {
