@@ -42,9 +42,8 @@ func (h *TodoHandler) DeleteData() fiber.Handler {
 			)
 		}
 
-		successMsg := fmt.Sprintf("deleted todo with id %v", todoId)
 		return ctx.Status(httpCode).JSON(
-			utils.SuccessResponse(successMsg, struct{}{}),
+			utils.SuccessResponse("Success", struct{}{}),
 		)
 	}
 }
