@@ -8,4 +8,5 @@ const (
 // User error
 const (
 	HTTPRequestErr = iota + 4001
+	NotFoundErr
 )

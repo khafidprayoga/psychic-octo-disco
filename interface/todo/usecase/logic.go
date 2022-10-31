@@ -82,7 +82,7 @@ func (u *TodoUseCase) UpdateExistingTodo(req request.UpdateExistingTodo) (res *e
 
 	// Validate todo exist
 	if err := u.data.ValidateTodo(req.GetId()); err != nil {
-		return nil, fiber.StatusNotFound, err, utils.HTTPRequestErr
+		return nil, fiber.StatusNotFound, err, utils.NotFoundErr
 	}
 
 	updatedEntities, err := u.data.UpdateTodo(req)

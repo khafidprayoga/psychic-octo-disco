@@ -124,6 +124,15 @@ func (h *TodoHandler) UpdateData() fiber.Handler {
 
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.UpdateExistingTodo(req)
 		if errLogic != nil {
+			if httpCode == fiber.StatusNotFound {
+				return ctx.Status(httpCode).JSON(
+					fiber.Map{
+						"status":  "Not Found",
+						"message": fmt.Sprintf("Todo with ID %v Not Found", todoId),
+						"data":    struct{}{},
+					},
+				)
+			}
 			return ctx.Status(httpCode).JSON(
 				utils.ErrorResponse(errLogic, internalErr),
 			)
