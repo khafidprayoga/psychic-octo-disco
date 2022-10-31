@@ -2,8 +2,8 @@ package req
 
 type UpdateExistingTodo struct {
 	id       string `validate:"-"`
-	Title    string `json:"title" validate:"required"`
-	IsActive *bool  `json:"is_active" validate:"required"`
+	Title    string `json:"title"`
+	IsActive *bool  `json:"is_active"`
 }
 
 func (t *UpdateExistingTodo) SetId(id string) {

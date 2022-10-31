@@ -83,9 +83,17 @@ func (q *TodoData) UpdateTodo(data req.UpdateExistingTodo) (*entities.Todo, erro
 		IsActive: &isActive,
 	}
 
-	if *data.IsActive == true {
-		isActive = 1
-		newData.IsActive = &isActive
+	if data.IsActive != nil {
+		isActive := 0
+		if *data.IsActive {
+			isActive = 1
+			newData.IsActive = &isActive
+		}
+
+		if !*data.IsActive {
+			newData.IsActive = &isActive
+
+		}
 	}
 
 	if e := q.dbMysql.Model(&entities.Todo{}).
