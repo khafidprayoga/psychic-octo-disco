@@ -79,6 +79,25 @@ func (h *TodoHandler) PostNewData() fiber.Handler {
 			return parsingErr
 		}
 
+		// FOR TESTING
+		if req.Title == "" {
+			return ctx.Status(fiber.StatusBadRequest).JSON(
+				fiber.Map{
+					"status":  "Bad Request",
+					"message": "title cannot be null",
+				},
+			)
+		}
+
+		// FOR TESTING
+		if req.ActivityGroupID == nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(
+				fiber.Map{
+					"status":  "Bad Request",
+					"message": "activity_group_id cannot be null",
+				},
+			)
+		}
 		resData, httpCode, errLogic, internalErr := h.useCaseImpl.CreateNewTodo(req)
 		if errLogic != nil {
 			return ctx.Status(httpCode).JSON(
@@ -87,7 +106,7 @@ func (h *TodoHandler) PostNewData() fiber.Handler {
 		}
 
 		return ctx.Status(httpCode).JSON(
-			utils.SuccessResponse("created new todo", &resData),
+			utils.SuccessResponse("created new todo", resData.ToResponse()),
 		)
 	}
 }

@@ -22,7 +22,7 @@ func New(db gorm.DB) *TodoData {
 func (q *TodoData) CreateNew(req req.CreateNewTodo) (data *entities.Todo, err error) {
 	newTodo := &entities.Todo{
 		Title:           req.Title,
-		ActivityGroupId: req.ActivityGroupID,
+		ActivityGroupId: *req.ActivityGroupID,
 	}
 
 	if err := q.dbMysql.Create(newTodo).Error; err != nil {

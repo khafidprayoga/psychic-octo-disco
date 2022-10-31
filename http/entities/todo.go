@@ -1,6 +1,9 @@
 package entities
 
-import "time"
+import (
+	"github.com/khafidprayoga/psychic-octo-disco/http/res"
+	"time"
+)
 
 type Todo struct {
 	ID              int        `json:"id"`
@@ -11,4 +14,21 @@ type Todo struct {
 	CreatedAt       *time.Time `json:"created_at"`
 	UpdatedAt       *time.Time `json:"updated_at"`
 	DeletedAt       *time.Time `json:"deleted_at"`
+}
+
+func (t *Todo) ToResponse() res.CreatedTodo {
+	todo := res.CreatedTodo{
+		ID:              t.ID,
+		ActivityGroupId: t.ActivityGroupId,
+		Title:           t.Title,
+		IsActive:        false,
+		Priority:        t.Priority,
+		CreatedAt:       t.CreatedAt,
+		UpdatedAt:       t.UpdatedAt,
+	}
+	if *t.IsActive == 1 {
+		todo.IsActive = true
+	}
+	
+	return todo
 }
