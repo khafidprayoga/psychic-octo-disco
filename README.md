@@ -3,7 +3,7 @@ Build Todo APP with Golang as backend services challenge by [https://devcode.get
 
 ## For Future
 - Add abstraction on use case layer return function with go generic
-- Add error (zap2) with its context for consumer, and server log (debug and secret not to be public exposed)
+- Add errorlog (zap2) with its context for api consumer, and server log (debug and secret not to be public exposed)
 
 ## How to use this repo
 1. Start `builder/docker-compose-dev` to running mysql services
